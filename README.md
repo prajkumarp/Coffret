@@ -1,12 +1,12 @@
 # 📁 Coffret - iOS FTP Server
 
-A powerful iOS app that turns your iPhone/iPad into a fully functional FTP server with a beautiful web interface for file management. Built with a clean, modular architecture for maintainability and extensibility.
+Transform your iPhone or iPad into a powerful FTP server with a beautiful web interface for seamless file sharing across your local network.
 
 ## ✨ Features
 
 - 🚀 **Full FTP Server** - Complete FTP protocol implementation
 - 🌐 **Web Interface** - Beautiful, responsive web UI for file management
-- 📱 **Native iOS UI** - Intuitive native interface for local file operations
+- 📱 **Native iOS Interface** - Intuitive file browser and server controls
 - 📤 **File Upload/Download** - Seamless file transfer capabilities
 - 📁 **Folder Management** - Create, delete, and organize folders
 - 🔄 **File Operations** - Copy, rename, delete, and share files
@@ -15,167 +15,124 @@ A powerful iOS app that turns your iPhone/iPad into a fully functional FTP serve
 
 ## 🚀 Quick Start
 
-1. **Launch the app** on your iOS device
-2. **Configure ports** (default: FTP 2121, Web 8080)
-3. **Tap "Start Server"** to begin
-4. **Connect from any device** on the same network
+1. **Launch Coffret** on your iOS device
+2. **Configure ports** (defaults: FTP 2121, Web 8080) if needed
+3. **Tap "Start Server"** to begin sharing files
+4. **Connect from any device** on the same WiFi network using the displayed URLs
 
 ## 📡 How to Connect
 
-### FTP Connection
-- **Server**: Your iPhone's IP address (shown in app)
+### 🌐 Web Interface (Recommended)
+The easiest way to access your files:
+- Open any web browser on your computer or device
+- Navigate to the **Web URL** shown in the app (e.g., `http://192.168.1.100:8080`)
+- Upload, download, and manage files directly in your browser
+
+### 📁 FTP Connection
+For advanced users and FTP clients:
+- **Server**: Your device's IP address (shown in app)
 - **Port**: 2121 (or your custom port)
-- **Username**: Any username
-- **Password**: Any password
+- **Username**: Any username (not validated)
+- **Password**: Any password (not validated)
 - **Mode**: Passive (PASV)
 
-### Web Interface
-- Open your browser and navigate to the Web URL shown in the app
-- Example: `http://192.168.1.100:8080`
+## 💻 Compatible Devices & Clients
 
-## 💻 Supported FTP Clients
+### Web Browsers
+- Safari, Chrome, Firefox, Edge on any device
+- Mobile browsers on phones and tablets
 
-- **iOS**: FTP Client Pro, FileExplorer
-- **Android**: AndFTP, Solid Explorer
-- **macOS**: Finder (Go → Connect to Server)
-- **Windows**: FileZilla, WinSCP, Windows Explorer
-- **Linux**: FileZilla, Nautilus, command line FTP
+### FTP Clients
+- **iOS**: Files app, FTP Client Pro, FileExplorer
+- **Android**: Files by Google, AndFTP, Solid Explorer
+- **macOS**: Finder (⌘K → Connect to Server)
+- **Windows**: File Explorer, FileZilla, WinSCP
+- **Linux**: Nautilus, FileZilla, command line FTP
 
-## 🏗 Project Architecture
+## 📱 Using the App
 
-The project has been designed with a clean, modular architecture for better maintainability and development:
+### Main Interface
+- **Server Status**: Shows if server is running and connection URLs
+- **Port Settings**: Customize FTP and Web server ports
+- **File Browser**: Browse and manage files on your device
+- **Server Controls**: Start/stop server with one tap
 
-```
-Coffret/
-├── Server/                          # Server-related components
-│   ├── FTP/                        # FTP server implementation
-│   │   ├── FTPServer.swift         # Main FTP server class
-│   │   └── FTPConnection.swift     # FTP connection handler
-│   └── Web/                        # Web server implementation
-│       ├── WebConnection.swift     # Web server connection handler
-│       └── WebInterfaceGenerator.swift # HTML interface generator
-├── UI/                             # User Interface components
-│   ├── Controllers/                # View Controllers
-│   │   └── ViewController.swift    # Main view controller
-│   ├── Views/                      # Custom Views and Cells
-│   │   └── FileTreeTableViewCell.swift # File tree table view cell
-│   └── Extensions/                 # View Controller Extensions
-│       ├── ViewController+FileOperations.swift
-│       ├── ViewController+ServerActions.swift
-│       ├── ViewController+UIDocumentPickerDelegate.swift
-│       └── ViewController+UITableView.swift
-├── Models/                         # Data Models
-│   └── FileTreeNode.swift         # File tree node model
-├── AppDelegate.swift              # App delegate
-└── SceneDelegate.swift             # Scene delegate
-```
+### File Management
+- **Tap folders** to expand/collapse directory tree
+- **Long press files** for context menu with operations
+- **Import files** from other apps using the share sheet
+- **Create folders** and organize your files
 
-### Core Components
+## 🔧 Configuration Tips
 
-#### 🖥 Server Components
-- **FTPServer**: Main server class managing both FTP and Web listeners
-- **FTPConnection**: Handles individual FTP client connections and protocol commands
-- **WebConnection**: HTTP server for REST API and web interface
-- **WebInterfaceGenerator**: Modern, responsive HTML interface generator
-
-#### 📱 UI Components
-- **ViewController**: Main interface with programmatic UI and scrollable layout
-- **Extensions**: Organized functionality (File Operations, Server Actions, Delegates)
-- **FileTreeTableViewCell**: Custom cell for hierarchical file display
-
-#### 📊 Models
-- **FileTreeNode**: Hierarchical file system representation with expansion/collapse
-
-## 🔧 Configuration
-
-### Ports
-- **FTP Port**: Default 2121 (can be changed)
-- **Web Port**: Default 8080 (can be changed)
-- Avoid ports below 1024 (requires root access)
+### Port Settings
+- **Default ports work** for most users (FTP: 2121, Web: 8080)
+- **Change ports** if you experience conflicts
+- **Avoid ports below 1024** (system reserved)
 
 ### Network Requirements
-- All devices must be on the same WiFi network
-- Router should allow local network communication
-- Firewall should not block the configured ports
-
-## 📱 App Interface
-
-### Main Screen
-- **Port Configuration**: Set FTP and Web server ports
-- **Server Control**: Start/stop server with one tap
-- **Status Display**: Real-time server status and URLs
-- **File Browser**: Navigate and manage local files
-
-### File Operations
-- **Long Press**: Context menu with file operations
-- **Tap Folders**: Expand/collapse directory tree
-- **Import**: Add files from other apps
-- **Create**: New folders and sample files
+- All devices must be on the **same WiFi network**
+- Router should allow **local network communication**
+- **Disable VPN** on devices if having connection issues
 
 ## 🌐 Web Interface Features
 
-- **File Browser**: Navigate through directories
-- **Upload**: Drag & drop or click to upload files
-- **Download**: Direct download links for all files
-- **Create Folders**: New directory creation
-- **Delete Files**: Remove files and folders
-- **Responsive Design**: Works on all screen sizes
+- **Drag & Drop Upload** - Simply drag files to upload
+- **One-Click Download** - Direct download for any file
+- **Folder Creation** - Create new directories instantly
+- **File Preview** - Preview images and text files
+- **Responsive Design** - Works perfectly on phones, tablets, and computers
+- **Real-time Updates** - File list updates automatically
 
-## 🔒 Security Notes
+## 🔒 Security & Privacy
 
-- Server only accepts connections from local network
-- No authentication required (suitable for private networks)
-- Files are served from app's Documents directory
-- Server automatically stops when app goes to background
+- **Local Network Only** - Server only accepts connections from your WiFi network
+- **No Internet Access** - Files never leave your local network
+- **No Authentication** - Designed for trusted home/office networks
+- **Automatic Security** - Server stops when app goes to background
+- **Private Files** - Only files in app's Documents folder are accessible
 
-## 🛠 Technical Details
-
-### Supported FTP Commands
-- `USER`, `PASS` - Authentication
-- `PWD`, `CWD` - Directory navigation
-- `LIST`, `NLST` - Directory listing
-- `RETR`, `STOR` - File transfer
-- `PASV` - Passive mode
-- `TYPE`, `SYST`, `QUIT` - Protocol commands
-
-### File Types
-- All file types supported
-- Automatic MIME type detection
-- Binary transfer mode
-- Preserves file attributes
-
-## 📋 Requirements
-
-- iOS 14.0 or later
-- Network framework support
-- Local network access permission
-
-## 🐛 Troubleshooting
+## 🛠 Troubleshooting
 
 ### Can't Connect to Server
-1. Ensure all devices are on same WiFi
-2. Check if ports are not blocked by firewall
-3. Verify server is running (check status in app)
-4. Try different port numbers if needed
+- ✅ Ensure all devices are on the **same WiFi network**
+- ✅ Check that **server is running** (green status in app)
+- ✅ Verify the **URL is correct** (copy from app display)
+- ✅ Try accessing from a **different device** to isolate the issue
+- ✅ **Restart the server** (stop and start again)
+
+### Web Interface Won't Load
+- ✅ **Copy the exact URL** from the app (don't type it manually)
+- ✅ Try a **different web browser**
+- ✅ Check if another app is using the **same port**
+- ✅ **Change the web port** in settings and restart server
 
 ### Slow File Transfer
-1. Move closer to WiFi router
-2. Close other network-intensive apps
-3. Use 5GHz WiFi if available
+- ✅ Move **closer to WiFi router**
+- ✅ Close other **network-intensive apps**
+- ✅ Use **5GHz WiFi** if available
+- ✅ Try **wired connection** on computer if possible
 
-### Web Interface Not Loading
-1. Check web URL is correct
-2. Try accessing from different browser
-3. Ensure web port is not in use by other apps
+### FTP Client Issues
+- ✅ Ensure **Passive (PASV) mode** is enabled
+- ✅ Use **port 2121** (or your custom FTP port)
+- ✅ Any **username/password** will work (not validated)
+- ✅ Try a **different FTP client** if problems persist
 
-## 🔄 Updates & Support
+## � System Requirements
 
-This app provides a complete FTP server solution for iOS devices. For issues or feature requests, the code is well-documented and can be extended as needed.
+- **iOS 14.0** or later
+- **WiFi connection** for file sharing
+- **Local network permission** (automatically requested)
 
-## 📄 License
+## 💡 Pro Tips
 
-Built with love for the iOS development community. Feel free to use, modify, and distribute as needed.
+- **Use the web interface** for the best experience across all devices
+- **Bookmark the web URL** for quick access from computers
+- **Create folders** to organize files before sharing
+- **Test with a small file** first when trying new clients
+- **Keep the app active** while transferring large files
 
 ---
 
-**Happy file sharing! 📁✨**
+**Start sharing files effortlessly with Coffret! 📁✨**

@@ -37,7 +37,7 @@ class WebInterfaceGenerator {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOS FTP Server - Web Interface</title>
+    <title>Coffret File Manager</title>
     <style>
         * {
             margin: 0;
@@ -46,193 +46,492 @@ class WebInterfaceGenerator {
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+            background: #f2f2f7;
             min-height: 100vh;
-            padding: 20px;
+            font-size: 13px;
+            color: #1d1d1f;
+            overflow-x: hidden;
         }
         
-        .container {
+        .window {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
+            margin: 20px auto;
             max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #eee;
-        }
-        
-        .header h1 {
-            color: #333;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .controls {
+            min-height: calc(100vh - 40px);
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn.danger {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
-        
-        .btn.danger:hover {
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-        
-        .file-upload {
-            display: none;
-        }
-        
-        .file-tree {
-            background: white;
-            border-radius: 15px;
+            flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .titlebar {
+            background: linear-gradient(180deg, #f6f6f6 0%, #e8e8e8 100%);
+            border-bottom: 1px solid #d0d0d0;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 52px;
+        }
+        
+        .traffic-lights {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .close { background: #ff5f57; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #28ca42; }
+        
+        .window-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1d1d1f;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .toolbar {
+            background: #f6f6f6;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 4px;
+            margin-right: 16px;
+        }
+        
+        .nav-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.1s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .toolbar-btn {
+            background: #ffffff;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            color: #1d1d1f;
+        }
+        
+        .toolbar-btn:hover {
+            background: #f0f0f0;
+            border-color: #b0b0b0;
+        }
+        
+        .toolbar-btn.primary {
+            background: #007aff;
+            border-color: #007aff;
+            color: white;
+        }
+        
+        .toolbar-btn.primary:hover {
+            background: #0056cc;
+        }
+        
+        .toolbar-btn.danger {
+            background: #ff3b30;
+            border-color: #ff3b30;
+            color: white;
+        }
+        
+        .toolbar-btn.danger:hover {
+            background: #d70015;
+        }
+        
+        .path-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .path-item {
+            color: #007aff;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.1s;
+        }
+        
+        .path-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .path-separator {
+            margin: 0 4px;
+            color: #8e8e93;
+            font-weight: normal;
+        }
+        
+        .content-area {
+            flex: 1;
+            display: flex;
+            background: #ffffff;
+        }
+        
+        .sidebar {
+            width: 200px;
+            background: #f8f8f8;
+            border-right: 1px solid #e0e0e0;
+            padding: 12px 8px;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 16px;
+        }
+        
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #8e8e93;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            padding: 0 12px;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.1s;
+            margin-bottom: 1px;
+        }
+        
+        .sidebar-item:hover {
+            background: #e8e8e8;
+        }
+        
+        .sidebar-item.active {
+            background: #007aff;
+            color: white;
+        }
+        
+        .sidebar-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .main-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .view-header {
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #8e8e93;
+        }
+        
+        .view-options {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .view-toggle {
+            background: none;
+            border: none;
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #8e8e93;
+            transition: all 0.1s;
+        }
+        
+        .view-toggle:hover {
+            background: #e8e8e8;
+            color: #1d1d1f;
+        }
+        
+        .view-toggle.active {
+            background: #007aff;
+            color: white;
+        }
+        
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
         }
         
         .file-item {
             display: flex;
             align-items: center;
-            padding: 15px 20px;
+            padding: 8px 20px;
             border-bottom: 1px solid #f0f0f0;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.1s;
             position: relative;
         }
         
         .file-item:hover {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-            transform: translateX(5px);
+            background: #f8f8f8;
         }
         
         .file-item.selected {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            border-left: 4px solid #667eea;
+            background: #007aff;
+            color: white;
+        }
+        
+        .file-item.selected .file-name,
+        .file-item.selected .file-info {
+            color: white;
         }
         
         .file-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 15px;
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .file-details {
+            flex: 1;
+            min-width: 0;
         }
         
         .file-name {
-            flex: 1;
+            font-size: 13px;
             font-weight: 500;
-            color: #333;
+            color: #1d1d1f;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
-        .file-size {
-            color: #666;
-            font-size: 14px;
-            margin-left: 15px;
+        .file-info {
+            font-size: 11px;
+            color: #8e8e93;
+            display: flex;
+            gap: 16px;
         }
         
         .file-actions {
             display: flex;
-            gap: 10px;
-            margin-left: 15px;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .file-item:hover .file-actions {
+            opacity: 1;
         }
         
         .action-btn {
-            background: none;
+            width: 24px;
+            height: 24px;
             border: none;
-            padding: 8px;
-            border-radius: 50%;
+            border-radius: 4px;
+            background: none;
             cursor: pointer;
-            color: #666;
-            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #8e8e93;
+            transition: all 0.1s;
         }
         
         .action-btn:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.05);
+            color: #1d1d1f;
         }
         
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            background: rgba(102, 126, 234, 0.05);
-            border-radius: 10px;
+        .file-item.selected .action-btn {
+            color: rgba(255, 255, 255, 0.8);
         }
         
-        .breadcrumb-item {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background 0.2s ease;
+        .file-item.selected .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
         }
         
-        .breadcrumb-item:hover {
-            background: rgba(102, 126, 234, 0.1);
+        .grid-view .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 16px;
+            padding: 20px;
         }
         
-        .breadcrumb-separator {
-            margin: 0 10px;
-            color: #999;
+        .grid-view .file-item {
+            flex-direction: column;
+            padding: 16px 12px;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 120px;
+        }
+        
+        .grid-view .file-icon {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+        }
+        
+        .grid-view .file-details {
+            width: 100%;
+        }
+        
+        .grid-view .file-name {
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.2;
+            white-space: normal;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .grid-view .file-info {
+            justify-content: center;
+            margin-top: 4px;
+        }
+        
+        .grid-view .file-actions {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            opacity: 0;
         }
         
         .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #8e8e93;
         }
         
         .spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(102, 126, 234, 0.3);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e0e0e0;
             border-radius: 50%;
-            border-top-color: #667eea;
-            animation: spin 1s ease-in-out infinite;
+            border-top-color: #007aff;
+            animation: spin 1s linear infinite;
+            margin-bottom: 12px;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #8e8e93;
+            text-align: center;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .upload-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px 40px;
+            z-index: 2000;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-content {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #007aff;
+            width: 0%;
+            transition: width 0.3s ease;
         }
         
         .modal {
@@ -243,98 +542,204 @@ class WebInterfaceGenerator {
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(5px);
         }
         
         .modal-content {
             background: white;
             margin: 15% auto;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 24px;
+            border-radius: 12px;
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1d1d1f;
         }
         
         .modal input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #eee;
+            border: 1px solid #d0d0d0;
             border-radius: 8px;
-            font-size: 16px;
-            margin: 15px 0;
-            transition: border-color 0.2s ease;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
         }
         
         .modal input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            padding: 8px 16px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.1s;
+        }
+        
+        .modal-btn.primary {
+            background: #007aff;
+            border-color: #007aff;
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .modal-btn.primary:hover {
+            background: #0056cc;
+        }
+        
+        .file-upload {
+            display: none;
         }
         
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
+            .window {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
             }
             
-            .controls {
-                flex-direction: column;
+            .sidebar {
+                display: none;
             }
             
-            .file-item {
-                padding: 12px 15px;
+            .toolbar {
+                flex-wrap: wrap;
+                gap: 8px;
             }
             
-            .file-actions {
-                margin-left: 10px;
+            .nav-buttons {
+                margin-right: 8px;
+            }
+            
+            .grid-view .file-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 12px;
+                padding: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📁 iOS FTP Server</h1>
-            <p>Web File Manager Interface</p>
+    <div class="window">
+        <div class="titlebar">
+            <div class="window-title">Coffret</div>
         </div>
         
-        <div class="controls">
+        <div class="toolbar">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigateBack()" id="backBtn" disabled>⬅</button>
+                <button class="nav-btn" onclick="navigateForward()" id="forwardBtn" disabled>➡</button>
+            </div>
+            
             <input type="file" id="fileInput" class="file-upload" multiple>
-            <button class="btn" onclick="document.getElementById('fileInput').click()">
-                📤 Upload Files
+            <button class="toolbar-btn primary" onclick="document.getElementById('fileInput').click();">
+                <span>⬆</span> Upload
             </button>
-            <button class="btn" onclick="createFolder()">
-                📁 New Folder
+            <button class="toolbar-btn" onclick="createFolder()">
+                <span>📁</span> New Folder
             </button>
-            <button class="btn" onclick="refreshFiles()">
-                🔄 Refresh
+            <button class="toolbar-btn" onclick="refreshFiles()">
+                <span>↻</span> Refresh
             </button>
-            <button class="btn danger" onclick="deleteSelected()" id="deleteBtn" style="display: none;">
-                🗑️ Delete Selected
+            <button class="toolbar-btn danger" onclick="deleteSelected()" id="deleteBtn" style="display: none;">
+                <span>🗑</span> Delete
             </button>
         </div>
         
-        <div class="breadcrumb" id="breadcrumb">
-            <a href="#" class="breadcrumb-item" onclick="navigateTo('')">🏠 Home</a>
+        <div class="path-bar" id="pathBar">
+            <a href="#" class="path-item" onclick="navigateTo('')">Coffret</a>
         </div>
         
-        <div class="file-tree" id="fileTree">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>Loading files...</p>
+        <div class="content-area">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Favorites</div>
+                    <div class="sidebar-item active" onclick="navigateTo('')">
+                        <span class="sidebar-icon">🏠</span>
+                        Home
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Categories</div>
+                    <div class="sidebar-item" onclick="filterByType('image')">
+                        <span class="sidebar-icon">🖼</span>
+                        Images
+                    </div>
+                    <div class="sidebar-item" onclick="filterByType('document')">
+                        <span class="sidebar-icon">📄</span>
+                        Documents
+                    </div>
+                    <div class="sidebar-item" onclick="filterByType('video')">
+                        <span class="sidebar-icon">🎬</span>
+                        Videos
+                    </div>
+                    <div class="sidebar-item" onclick="filterByType('audio')">
+                        <span class="sidebar-icon">🎵</span>
+                        Audio
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-view">
+                <div class="view-header">
+                    <div class="file-count" id="fileCount">Loading...</div>
+                    <div class="view-options">
+                        <button class="view-toggle active" onclick="toggleView('list')" id="listViewBtn">☰</button>
+                        <button class="view-toggle" onclick="toggleView('grid')" id="gridViewBtn">⊞</button>
+                    </div>
+                </div>
+                
+                <div class="file-list" id="fileList">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading files...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
-    <!-- Modal for creating folders -->
+    <div id="uploadProgress" class="upload-progress">
+        <div class="progress-content">
+            <div id="uploadProgressText">Preparing upload...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="uploadProgressBar"></div>
+            </div>
+        </div>
+    </div>
+    
     <div id="folderModal" class="modal">
         <div class="modal-content">
-            <h3>Create New Folder</h3>
-            <input type="text" id="folderName" placeholder="Folder name">
-            <div style="text-align: right; margin-top: 20px;">
-                <button class="btn" onclick="closeFolderModal()">Cancel</button>
-                <button class="btn" onclick="confirmCreateFolder()" style="margin-left: 10px;">Create</button>
+            <h3>New Folder</h3>
+            <input type="text" id="folderName" placeholder="Untitled folder">
+            <div class="modal-actions">
+                <button class="modal-btn" onclick="closeFolderModal()">Cancel</button>
+                <button class="modal-btn primary" onclick="confirmCreateFolder()">Create</button>
             </div>
         </div>
     </div>
@@ -342,96 +747,288 @@ class WebInterfaceGenerator {
     <script>
         let currentPath = '';
         let selectedFiles = new Set();
+        let navigationHistory = [''];
+        let historyIndex = 0;
+        let currentView = 'list';
+        let fileFilter = null;
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Initializing Finder-style interface');
             loadFiles();
             
             // File upload handler
-            document.getElementById('fileInput').addEventListener('change', function(e) {
-                uploadFiles(e.target.files);
+            const fileInput = document.getElementById('fileInput');
+            console.log('File input element:', fileInput);
+            
+            fileInput.addEventListener('change', function(e) {
+                console.log('File input change event triggered');
+                console.log('Selected files:', e.target.files);
+                console.log('Number of files:', e.target.files.length);
+                
+                if (e.target.files.length > 0) {
+                    for (let i = 0; i < e.target.files.length; i++) {
+                        console.log(`File ${i}:`, e.target.files[i].name, e.target.files[i].size, 'bytes');
+                    }
+                    uploadFiles(e.target.files);
+                } else {
+                    console.log('No files selected');
+                }
             });
         });
         
         function loadFiles(path = '') {
             currentPath = path;
-            updateBreadcrumb();
+            updatePathBar();
+            updateNavigationButtons();
+            clearSelection();
             
             fetch(`/api/files${path ? '/' + encodeURIComponent(path) : ''}`)
                 .then(response => response.json())
                 .then(files => {
                     displayFiles(files);
+                    updateFileCount(files.length);
                 })
                 .catch(error => {
                     console.error('Error loading files:', error);
-                    document.getElementById('fileTree').innerHTML = '<div class="loading"><p>Error loading files</p></div>';
+                    document.getElementById('fileList').innerHTML = '<div class="loading"><p>Error loading files</p></div>';
                 });
         }
         
         function displayFiles(files) {
-            const fileTree = document.getElementById('fileTree');
+            const fileList = document.getElementById('fileList');
             
-            if (files.length === 0) {
-                fileTree.innerHTML = '<div class="loading"><p>📂 Empty folder</p></div>';
+            // Filter files if a filter is active
+            let filteredFiles = files;
+            if (fileFilter) {
+                filteredFiles = files.filter(file => {
+                    if (file.isDirectory) return true; // Always show directories
+                    return getFileCategory(file.name) === fileFilter;
+                });
+            }
+            
+            if (filteredFiles.length === 0) {
+                fileList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📂</div>
+                        <p>${fileFilter ? `No ${fileFilter} files found` : 'This folder is empty'}</p>
+                    </div>
+                `;
                 return;
             }
             
-            let html = '';
-            
             // Sort files: directories first, then by name
-            files.sort((a, b) => {
+            filteredFiles.sort((a, b) => {
                 if (a.isDirectory && !b.isDirectory) return -1;
                 if (!a.isDirectory && b.isDirectory) return 1;
                 return a.name.localeCompare(b.name);
             });
             
-            files.forEach(file => {
+            let html = '';
+            
+            filteredFiles.forEach(file => {
                 const icon = file.isDirectory ? '📁' : getFileIcon(file.name);
                 const size = file.isDirectory ? '' : formatFileSize(file.size);
                 const path = file.path.startsWith('/') ? file.path.substring(1) : file.path;
+                const modDate = file.modified ? formatDate(new Date(file.modified)) : '';
                 
                 html += `
-                    <div class="file-item" onclick="selectFile('${path}', ${file.isDirectory})" data-path="${path}">
+                    <div class="file-item" onclick="selectFile('${path}', ${file.isDirectory})" data-path="${path}" ondblclick="openFile('${path}', ${file.isDirectory})">
                         <div class="file-icon">${icon}</div>
-                        <div class="file-name">${file.name}</div>
-                        <div class="file-size">${size}</div>
+                        <div class="file-details">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-info">
+                                ${size ? `<span>${size}</span>` : ''}
+                                ${modDate ? `<span>${modDate}</span>` : ''}
+                            </div>
+                        </div>
                         <div class="file-actions">
-                            ${!file.isDirectory ? `<button class="action-btn" onclick="event.stopPropagation(); downloadFile('${path}')" title="Download">⬇️</button>` : ''}
-                            <button class="action-btn" onclick="event.stopPropagation(); deleteFile('${path}')" title="Delete">🗑️</button>
+                            ${!file.isDirectory ? `<button class="action-btn" onclick="event.stopPropagation(); downloadFile('${path}')" title="Download">↓</button>` : ''}
+                            <button class="action-btn" onclick="event.stopPropagation(); deleteFile('${path}')" title="Delete">🗑</button>
                         </div>
                     </div>
                 `;
             });
             
-            fileTree.innerHTML = html;
+            fileList.innerHTML = html;
         }
         
         function selectFile(path, isDirectory) {
-            if (isDirectory) {
-                loadFiles(path);
+            const fileItem = document.querySelector(`[data-path="${path}"]`);
+            
+            if (selectedFiles.has(path)) {
+                selectedFiles.delete(path);
+                fileItem.classList.remove('selected');
             } else {
-                // Toggle selection for files
-                const fileItem = document.querySelector(`[data-path="${path}"]`);
-                if (selectedFiles.has(path)) {
-                    selectedFiles.delete(path);
-                    fileItem.classList.remove('selected');
-                } else {
-                    selectedFiles.add(path);
-                    fileItem.classList.add('selected');
-                }
-                
-                // Show/hide delete button
-                const deleteBtn = document.getElementById('deleteBtn');
-                deleteBtn.style.display = selectedFiles.size > 0 ? 'inline-block' : 'none';
+                selectedFiles.add(path);
+                fileItem.classList.add('selected');
+            }
+            
+            updateDeleteButton();
+        }
+        
+        function openFile(path, isDirectory) {
+            if (isDirectory) {
+                navigateTo(path);
+            } else {
+                downloadFile(path);
             }
         }
         
+        function navigateTo(path) {
+            // Add to history if navigating to a new path
+            if (path !== currentPath) {
+                navigationHistory = navigationHistory.slice(0, historyIndex + 1);
+                navigationHistory.push(path);
+                historyIndex = navigationHistory.length - 1;
+            }
+            
+            // Clear any active filter when navigating
+            fileFilter = null;
+            updateSidebarSelection();
+            
+            loadFiles(path);
+        }
+        
+        function navigateBack() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                loadFiles(navigationHistory[historyIndex]);
+            }
+        }
+        
+        function navigateForward() {
+            if (historyIndex < navigationHistory.length - 1) {
+                historyIndex++;
+                loadFiles(navigationHistory[historyIndex]);
+            }
+        }
+        
+        function updateNavigationButtons() {
+            document.getElementById('backBtn').disabled = historyIndex <= 0;
+            document.getElementById('forwardBtn').disabled = historyIndex >= navigationHistory.length - 1;
+        }
+        
+        function toggleView(viewType) {
+            currentView = viewType;
+            const fileList = document.getElementById('fileList');
+            const listBtn = document.getElementById('listViewBtn');
+            const gridBtn = document.getElementById('gridViewBtn');
+            
+            if (viewType === 'grid') {
+                fileList.parentElement.classList.add('grid-view');
+                listBtn.classList.remove('active');
+                gridBtn.classList.add('active');
+            } else {
+                fileList.parentElement.classList.remove('grid-view');
+                listBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+            }
+        }
+        
+        function filterByType(type) {
+            fileFilter = type;
+            updateSidebarSelection(type);
+            loadFiles(currentPath);
+        }
+        
+        function updateSidebarSelection(activeFilter = null) {
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (!activeFilter) {
+                // Highlight home
+                sidebarItems[0].classList.add('active');
+            } else {
+                // Find and highlight the filter item
+                sidebarItems.forEach(item => {
+                    if (item.textContent.trim().toLowerCase().includes(activeFilter)) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+        }
+        
+        function clearSelection() {
+            selectedFiles.clear();
+            document.querySelectorAll('.file-item.selected').forEach(item => {
+                item.classList.remove('selected');
+            });
+            updateDeleteButton();
+        }
+        
+        function updateDeleteButton() {
+            const deleteBtn = document.getElementById('deleteBtn');
+            deleteBtn.style.display = selectedFiles.size > 0 ? 'inline-block' : 'none';
+        }
+        
+        function updateFileCount(count) {
+            const fileCount = document.getElementById('fileCount');
+            if (count === 0) {
+                fileCount.textContent = 'No items';
+            } else if (count === 1) {
+                fileCount.textContent = '1 item';
+            } else {
+                fileCount.textContent = `${count} items`;
+            }
+        }
+        
+        function updatePathBar() {
+            const pathBar = document.getElementById('pathBar');
+            let html = '<a href="#" class="path-item" onclick="navigateTo(\\'\\')">Coffret</a>';
+            
+            if (currentPath) {
+                const parts = currentPath.split('/').filter(part => part);
+                let accumulatedPath = '';
+                
+                parts.forEach(part => {
+                    accumulatedPath += (accumulatedPath ? '/' : '') + part;
+                    html += `<span class="path-separator">›</span>`;
+                    html += `<a href="#" class="path-item" onclick="navigateTo('${accumulatedPath}')">${part}</a>`;
+                });
+            }
+            
+            pathBar.innerHTML = html;
+        }
+        
         function downloadFile(path) {
-            window.open(`/download/${encodeURIComponent(path)}`, '_blank');
+            console.log('Download requested for path:', path);
+            
+            const fileName = path.split('/').pop();
+            const downloadUrl = `/download/${encodeURIComponent(fileName)}`;
+            console.log('Download URL:', downloadUrl);
+            console.log('Filename:', fileName);
+            
+            fetch(downloadUrl)
+                .then(response => {
+                    console.log('Download response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    console.log('Download blob received, size:', blob.size);
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    console.log('Download completed');
+                })
+                .catch(error => {
+                    console.error('Download failed:', error);
+                    window.open(downloadUrl, '_blank');
+                });
         }
         
         function deleteFile(path) {
-            if (confirm(`Are you sure you want to delete ${path}?`)) {
+            if (confirm(`Are you sure you want to move "${path.split('/').pop()}" to the trash?`)) {
                 fetch(`/api/delete/${encodeURIComponent(path)}`, {
                     method: 'DELETE'
                 })
@@ -449,15 +1046,15 @@ class WebInterfaceGenerator {
         function deleteSelected() {
             if (selectedFiles.size === 0) return;
             
-            const fileList = Array.from(selectedFiles).join(', ');
-            if (confirm(`Are you sure you want to delete ${selectedFiles.size} file(s)?: ${fileList}`)) {
+            const fileNames = Array.from(selectedFiles).map(path => path.split('/').pop()).join(', ');
+            if (confirm(`Are you sure you want to move ${selectedFiles.size} item(s) to the trash?\\n\\n${fileNames}`)) {
                 const deletePromises = Array.from(selectedFiles).map(path => 
                     fetch(`/api/delete/${encodeURIComponent(path)}`, { method: 'DELETE' })
                 );
                 
                 Promise.all(deletePromises)
                     .then(() => {
-                        selectedFiles.clear();
+                        clearSelection();
                         loadFiles(currentPath);
                     })
                     .catch(error => {
@@ -468,23 +1065,77 @@ class WebInterfaceGenerator {
         }
         
         function uploadFiles(files) {
-            for (let file of files) {
+            console.log('uploadFiles function called with:', files);
+            
+            if (!files || files.length === 0) {
+                console.log('No files to upload, returning early');
+                return;
+            }
+            
+            console.log(`Starting upload of ${files.length} files`);
+            
+            const progressOverlay = document.getElementById('uploadProgress');
+            const progressBarFill = document.getElementById('uploadProgressBar');
+            const progressText = document.getElementById('uploadProgressText');
+            
+            progressOverlay.style.display = 'block';
+            let completedUploads = 0;
+            const totalFiles = files.length;
+            
+            function updateProgress() {
+                const percentage = Math.round((completedUploads / totalFiles) * 100);
+                progressBarFill.style.width = percentage + '%';
+                progressText.textContent = `Uploading ${completedUploads} of ${totalFiles} files (${percentage}%)`;
+            }
+            
+            updateProgress();
+            
+            async function uploadFile(file) {
+                console.log(`Starting upload for file: ${file.name} (${file.size} bytes)`);
+                
                 const formData = new FormData();
                 formData.append('file', file);
+                formData.append('path', currentPath);
                 
-                fetch('/api/upload', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text())
-                .then(() => {
-                    loadFiles(currentPath);
-                })
-                .catch(error => {
+                try {
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    }
+                    
+                    completedUploads++;
+                    updateProgress();
+                    return true;
+                } catch (error) {
                     console.error('Error uploading file:', error);
-                    alert(`Failed to upload ${file.name}`);
-                });
+                    alert(`Failed to upload ${file.name}: ${error.message}`);
+                    completedUploads++;
+                    updateProgress();
+                    return false;
+                }
             }
+            
+            (async () => {
+                try {
+                    for (let i = 0; i < files.length; i++) {
+                        await uploadFile(files[i]);
+                        if (i < files.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 100));
+                        }
+                    }
+                } finally {
+                    setTimeout(() => {
+                        progressOverlay.style.display = 'none';
+                        progressBarFill.style.width = '0%';
+                        loadFiles(currentPath);
+                    }, 1000);
+                }
+            })();
         }
         
         function createFolder() {
@@ -506,7 +1157,10 @@ class WebInterfaceGenerator {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name: folderName })
+                body: JSON.stringify({ 
+                    name: folderName,
+                    path: currentPath 
+                })
             })
             .then(response => response.text())
             .then(() => {
@@ -523,57 +1177,73 @@ class WebInterfaceGenerator {
             loadFiles(currentPath);
         }
         
-        function navigateTo(path) {
-            loadFiles(path);
-        }
-        
-        function updateBreadcrumb() {
-            const breadcrumb = document.getElementById('breadcrumb');
-            let html = '<a href="#" class="breadcrumb-item" onclick="navigateTo(\\'\\')">🏠 Home</a>';
-            
-            if (currentPath) {
-                const parts = currentPath.split('/').filter(part => part);
-                let accumulatedPath = '';
-                
-                parts.forEach(part => {
-                    accumulatedPath += (accumulatedPath ? '/' : '') + part;
-                    html += `<span class="breadcrumb-separator">›</span>`;
-                    html += `<a href="#" class="breadcrumb-item" onclick="navigateTo('${accumulatedPath}')">${part}</a>`;
-                });
-            }
-            
-            breadcrumb.innerHTML = html;
-        }
-        
         function getFileIcon(filename) {
             const extension = filename.split('.').pop().toLowerCase();
             
             switch (extension) {
-                case 'txt': case 'md': case 'readme':
+                case 'txt': case 'md': case 'readme': case 'rtf':
                     return '📄';
-                case 'jpg': case 'jpeg': case 'png': case 'gif': case 'bmp':
-                    return '🖼️';
-                case 'mp4': case 'avi': case 'mov': case 'mkv':
+                case 'jpg': case 'jpeg': case 'png': case 'gif': case 'bmp': case 'svg': case 'webp':
+                    return '🖼';
+                case 'mp4': case 'avi': case 'mov': case 'mkv': case 'webm': case 'm4v':
                     return '🎬';
-                case 'mp3': case 'wav': case 'aac': case 'm4a':
+                case 'mp3': case 'wav': case 'aac': case 'm4a': case 'flac': case 'ogg':
                     return '🎵';
                 case 'pdf':
-                    return '📋';
-                case 'zip': case 'rar': case '7z': case 'tar':
+                    return '📕';
+                case 'doc': case 'docx':
+                    return '📘';
+                case 'xls': case 'xlsx':
+                    return '📗';
+                case 'ppt': case 'pptx':
+                    return '📙';
+                case 'zip': case 'rar': case '7z': case 'tar': case 'gz':
                     return '📦';
-                case 'js': case 'html': case 'css': case 'py': case 'swift':
+                case 'js': case 'html': case 'css': case 'py': case 'swift': case 'java': case 'cpp': case 'c':
                     return '💻';
+                case 'dmg': case 'pkg': case 'app':
+                    return '📱';
                 default:
                     return '📄';
             }
         }
         
+        function getFileCategory(filename) {
+            const extension = filename.split('.').pop().toLowerCase();
+            
+            if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(extension)) {
+                return 'image';
+            } else if (['mp4', 'avi', 'mov', 'mkv', 'webm', 'm4v'].includes(extension)) {
+                return 'video';
+            } else if (['mp3', 'wav', 'aac', 'm4a', 'flac', 'ogg'].includes(extension)) {
+                return 'audio';
+            } else {
+                return 'document';
+            }
+        }
+        
         function formatFileSize(bytes) {
-            if (bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB'];
+            if (bytes === 0) return '0 bytes';
+            const k = 1000;
+            const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+        
+        function formatDate(date) {
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) {
+                return 'Today';
+            } else if (days === 1) {
+                return 'Yesterday';
+            } else if (days < 7) {
+                return `${days} days ago`;
+            } else {
+                return date.toLocaleDateString();
+            }
         }
         
         // Handle modal clicks
@@ -587,6 +1257,31 @@ class WebInterfaceGenerator {
         document.getElementById('folderName').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 confirmCreateFolder();
+            }
+        });
+        
+        // Handle keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.metaKey || e.ctrlKey) {
+                switch(e.key) {
+                    case 'a':
+                        e.preventDefault();
+                        // Select all files
+                        document.querySelectorAll('.file-item').forEach(item => {
+                            const path = item.getAttribute('data-path');
+                            selectedFiles.add(path);
+                            item.classList.add('selected');
+                        });
+                        updateDeleteButton();
+                        break;
+                    case 'Backspace':
+                        e.preventDefault();
+                        deleteSelected();
+                        break;
+                }
+            } else if (e.key === 'Escape') {
+                clearSelection();
+                closeFolderModal();
             }
         });
     </script>
