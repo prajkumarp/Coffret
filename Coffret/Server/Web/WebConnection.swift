@@ -143,7 +143,7 @@ class WebConnection {
         }
         
         // Look for the end of headers manually to avoid any Data.range issues
-        let headerEndPattern: [UInt8] = [0x0D, 0x0A, 0x0D, 0x0A] // \r\n\r\n
+        let _: [UInt8] = [0x0D, 0x0A, 0x0D, 0x0A] // \r\n\r\n
         var headerEndIndex: Int?
         
         // Ensure we have enough bytes to search for the pattern
