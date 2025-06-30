@@ -1,8 +1,19 @@
-# Coffret App Test Coverage Report
+# Coffret Test Coverage Report
 
-## Overview
+Generated on: June 30, 2025  
+Test Run: iPhone 16 Simulator  
 
-This document outlines the comprehensive test coverage for the Coffret FTP Server iOS application. The test suite includes unit tests, integration tests, and UI tests designed to ensure maximum code coverage and robust functionality across all scenarios.
+## Executive Summary
+
+**Overall Project Coverage: 57.31%** (1,865 covered lines out of 3,254 executable lines)
+
+### Coverage by Module
+
+| Module | Coverage | Lines Covered | Total Lines |
+|--------|----------|---------------|-------------|
+| **Coffret.app** | **57.31%** | 1,865 | 3,254 |
+| **CoffretTests.xctest** | **98.89%** | 1,809 | 1,830 |
+| **CoffretUITests.xctest** | **76.42%** | 914 | 1,196 |
 
 ## Test Structure
 
@@ -152,6 +163,8 @@ This document outlines the comprehensive test coverage for the Coffret FTP Serve
 # Run all unit tests
 xcodebuild test -project Coffret.xcodeproj -scheme Coffret -destination 'platform=iOS Simulator,name=iPhone 15'
 
+xcodebuild test -scheme Coffret -destination 'platform=macOS' -enableCodeCoverage YES -derivedDataPath ./DerivedData
+
 # Run UI tests
 xcodebuild test -project Coffret.xcodeproj -scheme CoffretUITests -destination 'platform=iOS Simulator,name=iPhone 15'
 
@@ -240,3 +253,186 @@ The tests are designed to:
 - Confirm accessibility compliance
 
 This comprehensive testing approach ensures that users receive a robust, reliable FTP server application that performs well across all supported iOS devices and scenarios.
+
+## Detailed Coverage Analysis (June 30, 2025)
+
+### Main Application (Coffret.app) - 57.31% Coverage
+
+#### Core Components
+
+| Component | Coverage | Status | Notes |
+|-----------|----------|---------|-------|
+| **FileTreeNode.swift** | **98.67%** | ✅ Excellent | Core file tree functionality well tested |
+| **AppDelegate.swift** | **100.00%** | ✅ Excellent | Application lifecycle fully covered |
+| **ViewController.swift** | **79.49%** | ⚠️ Good | Main UI controller, some context menu functions not covered |
+| **WebInterfaceGenerator.swift** | **100.00%** | ✅ Excellent | Web interface generation fully tested |
+| **SceneDelegate.swift** | **88.00%** | ✅ Good | Scene management mostly covered |
+
+#### Network & Server Components
+
+| Component | Coverage | Status | Critical Issues |
+|-----------|----------|---------|-----------------|
+| **FTPConnection.swift** | **2.16%** | ❌ Critical | Most FTP functionality untested |
+| **FTPServer.swift** | **45.74%** | ⚠️ Needs Work | Server initialization covered, but connection handling missing |
+| **WebConnection.swift** | **0.00%** | ❌ Critical | No web connection functionality tested |
+
+#### UI Extensions
+
+| Component | Coverage | Status | Notes |
+|-----------|----------|---------|-------|
+| **ViewController+UITableView.swift** | **88.24%** | ✅ Good | Table view functionality well covered |
+| **ViewController+ServerActions.swift** | **56.67%** | ⚠️ Needs Work | Server start/stop partially covered |
+| **ViewController+FileOperations.swift** | **30.28%** | ⚠️ Poor | File operations need more coverage |
+| **ViewController+UIDocumentPickerDelegate.swift** | **0.00%** | ❌ Critical | Document picker not tested |
+| **FileTreeTableViewCell.swift** | **0.00%** | ❌ Critical | Table view cell configuration not tested |
+
+## Test Results Summary
+
+### Unit Tests (CoffretTests) - 98.89% Coverage
+- **Total Tests:** 64 tests
+- **Passed:** 60 tests ✅
+- **Failed:** 4 tests ❌
+- **Success Rate:** 93.75%
+
+#### Failed Tests:
+1. `FTPConnectionTests.testPathSecurity()` - Security validation failing
+2. `CoffretTests.testWebInterfaceGeneration()` - Web interface test issues  
+3. `WebConnectionTests.testFileUploadValidation()` - Upload validation failing
+4. `WebConnectionTests.testDirectoryCreation()` - Directory creation test failing
+
+### Integration Tests (IntegrationTests) - 98.19% Coverage
+- **Total Tests:** 8 tests
+- **Passed:** 7 tests ✅
+- **Failed:** 1 test ❌
+- **Success Rate:** 87.5%
+
+#### Failed Test:
+1. `IntegrationTests.testFileOperationsUIDataFlow()` - UI data flow integration failing
+
+### UI Tests (CoffretUITests) - 76.42% Coverage
+- **Total Tests:** 24 tests
+- **Passed:** 11 tests ✅
+- **Failed:** 13 tests ❌
+- **Success Rate:** 45.8%
+
+#### Major UI Test Issues:
+- Accessibility tests failing
+- App launch tests intermittently failing
+- Server start/stop UI tests failing
+- Launch performance tests failing
+
+## Critical Areas Requiring Attention
+
+### 🔴 High Priority (Critical)
+
+1. **FTP Connection Implementation** (2.16% coverage)
+   - Core FTP protocol handling is largely untested
+   - Command processing, file transfers, and connection management need comprehensive testing
+
+2. **Web Connection Handler** (0.00% coverage)
+   - Entire web server functionality is untested
+   - HTTP request handling, file serving, and API endpoints need coverage
+
+3. **File Operations UI** (30.28% coverage)
+   - File sharing, copying, deleting operations poorly tested
+   - Document picker integration completely missing
+
+4. **Table View Cell Configuration** (0.00% coverage)
+   - UI cell setup and display logic not tested
+
+### 🟡 Medium Priority (Needs Improvement)
+
+1. **Server Actions** (56.67% coverage)
+   - Server start/stop functionality partially covered
+   - Error handling and edge cases need attention
+
+2. **Context Menu Functionality** (0% in ViewController.swift)
+   - User interaction features not covered
+   - Long press actions and context menus need testing
+
+3. **UI Test Reliability**
+   - 54% of UI tests are failing
+   - Need to stabilize test environment and improve test design
+
+### 🟢 Well Covered Areas
+
+1. **File Tree Management** (98.67% coverage)
+   - Excellent coverage of core file system operations
+   - Tree expansion, navigation, and refresh functionality well tested
+
+2. **Web Interface Generation** (100% coverage)
+   - HTML generation fully covered
+   - Template rendering and content creation tested
+
+3. **Application Lifecycle** (100% coverage)
+   - App delegate and scene management fully tested
+
+## Recommendations
+
+### Immediate Actions (Next Sprint)
+
+1. **Add FTP Connection Tests**
+   - Create mock FTP servers for testing
+   - Test command parsing and response generation
+   - Verify file transfer operations
+
+2. **Implement Web Connection Tests**
+   - Mock HTTP requests and responses
+   - Test file upload/download functionality
+   - Verify API endpoint behavior
+
+3. **Fix Failing Unit Tests**
+   - Investigate and resolve the 4 failing unit tests
+   - Update test assertions and mock data as needed
+
+### Medium-term Goals
+
+1. **Expand File Operations Testing**
+   - Test file sharing workflows
+   - Cover document picker integration
+   - Verify file system permissions and error handling
+
+2. **Improve UI Test Stability**
+   - Refactor UI tests to be more reliable
+   - Add better waiting mechanisms
+   - Implement proper test data cleanup
+
+3. **Add Performance Testing**
+   - Measure and test file tree performance with large directories
+   - Verify memory usage during file operations
+   - Test network performance under load
+
+### Long-term Strategy
+
+1. **Achieve 85%+ Overall Coverage**
+   - Focus on covering the critical server and network components
+   - Maintain high coverage for existing well-tested areas
+
+2. **Implement Continuous Integration**
+   - Set up automated test runs on pull requests
+   - Monitor coverage trends over time
+   - Enforce minimum coverage thresholds
+
+3. **Add End-to-End Testing**
+   - Test complete user workflows
+   - Verify integration between FTP and web interfaces
+   - Test real-world usage scenarios
+
+## Methodology
+
+This coverage report was generated using Xcode's built-in code coverage tools with the following command:
+
+```bash
+xcodebuild test -scheme Coffret \
+  -destination 'platform=iOS Simulator,name=iPhone 16' \
+  -enableCodeCoverage YES
+```
+
+Coverage data was extracted using:
+```bash
+xcrun xccov view --report [xcresult_bundle_path]
+```
+
+## Next Review
+
+The next coverage review should be conducted after addressing the critical FTP and Web connection testing gaps. Target date: 2 weeks from current sprint completion.
